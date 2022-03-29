@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no" />
+  <link href="css/styles.css" rel="stylesheet" />
+  <title>Test Task 1 Alt</title>
+
+  <script type="module">
+    import { createCanvasElement, getStarPoints, rgbToHex } from './utils/canvas.js'
+
+    const appEl = document.getElementById('app')
+    const [canvas1, ctx1] = createCanvas(appEl, 600, 600)
+    const [canvas2, ctx2] = createCanvas(appEl, 600, 50);
+
+    [
+      [120, 210, '#fd0040'],
+      [300, 210, '#0065fd'],
+      [480, 210, '#00e179'],
+      [210, 390, '#fdb500'],
+      [390, 390, '#000000'],
+    ].forEach(props => drawStar(ctx1, props))
+
+    canvas1.addEventListener('click', ({ offsetX, offsetY }) => {
+      const ratio = window.devicePixelRatio
+      const data = ctx1.getImageData(offsetX * ratio, offsetY * ratio, 1, 1).data
+      ctx2.fillStyle = '#' + ('000000' + rgbToHex(data[0], data[1], data[2])).slice(-6)
+      ctx2.fillRect(0, 0, canvas2.width, canvas2.height)
+    })
+
+    function createCanvas(appEl, width, height) {
+      const canvas = createCanvasElement(width, height)
+      canvas.classList.add('canvas')
+      canvas.style.display = 'block'
+      canvas.style.margin = '20px'
+      const ctx = canvas.getContext('2d')
+      ctx.fillStyle = '#ffffff'
+      ctx.fillRect(0, 0, width, height)
+      appEl.appendChild(canvas)
+      return [canvas, ctx]
+    }
+
+    function drawStar(ctx, starData) {
+      const starPoints = getStarPoints(starData[0], starData[1], 30, 60)
+      ctx.beginPath()
+      ctx.moveTo(...starPoints.shift())
+      starPoints.forEach(([x, y]) => ctx.lineTo(x, y))
+      ctx.closePath()
+      ctx.fillStyle = `${starData[2]}`
+      ctx.fill()
+    }
+  </script>
+</head>
+
+<body>
+<noscript>You need to enable JavaScript to run this app.</noscript>
+<div id="app"></div>
+</body>
+</html>
