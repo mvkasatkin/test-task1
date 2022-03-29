@@ -23,9 +23,7 @@
     ].forEach(props => drawStar(ctx1, props))
 
     canvas1.addEventListener('click', ({ offsetX, offsetY }) => {
-      const ratio = window.devicePixelRatio
-      const data = ctx1.getImageData(offsetX * ratio, offsetY * ratio, 1, 1).data
-      ctx2.fillStyle = '#' + ('000000' + rgbToHex(data[0], data[1], data[2])).slice(-6)
+      ctx2.fillStyle = getColor(ctx1, offsetX, offsetY)
       ctx2.fillRect(0, 0, canvas2.width, canvas2.height)
     })
 
@@ -49,6 +47,12 @@
       ctx.closePath()
       ctx.fillStyle = `${starData[2]}`
       ctx.fill()
+    }
+
+    function getColor(ctx, x, y) {
+      const ratio = window.devicePixelRatio
+      const data = ctx.getImageData(x * ratio, y * ratio, 1, 1).data
+      return '#' + ('000000' + rgbToHex(data[0], data[1], data[2])).slice(-6)
     }
   </script>
 </head>
